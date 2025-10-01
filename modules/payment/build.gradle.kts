@@ -12,7 +12,6 @@ java { toolchain { languageVersion.set(JavaLanguageVersion.of(17)) } }
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
-    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     runtimeOnly("com.mysql:mysql-connector-j") // MySQL 8
     testImplementation("org.springframework.boot:spring-boot-starter-test")
