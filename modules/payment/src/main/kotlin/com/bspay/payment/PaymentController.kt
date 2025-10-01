@@ -1,4 +1,4 @@
-package com.example.payment
+package com.bspay.payment
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import kotlin.random.Random

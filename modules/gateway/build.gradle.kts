@@ -32,5 +32,5 @@ dependencyManagement {
 
 // ✅ 자동탐지 실패해도 확실히 빌드되도록 mainClass 명시
 tasks.named<BootJar>("bootJar") {
-    mainClass.set("com.bspay.gateway.GatewayApplication")
+    mainClass.set("com.bspay.gateway.GatewayApplicationKt")
 }

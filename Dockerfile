@@ -31,6 +31,9 @@ COPY --from=build /src/modules/payment/build/libs/*-SNAPSHOT.jar       /app/paym
 COPY --from=build /src/modules/order-query/build/libs/*-SNAPSHOT.jar   /app/order-query.jar
 COPY docker/entrypoint.sh /app/entrypoint.sh
 
+RUN sed -i 's/\r$//' /app/entrypoint.sh \
+ && chmod +x /app/entrypoint.sh
+
 # 패키지 및 유저/그룹 생성, 권한 설정 (+ HEALTHCHECK용 wget)
 RUN set -eux; \
     apt-get update; \
