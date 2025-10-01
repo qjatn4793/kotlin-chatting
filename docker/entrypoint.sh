@@ -33,13 +33,14 @@ echo "[bspay] starting services..."
 echo "        profile=${SPRING_PROFILES_ACTIVE}"
 echo "        db=jdbc:mysql://${DB_HOST}:${DB_PORT}/${DB_NAME}"
 echo "        kafka=${KAFKA_BOOTSTRAP_SERVERS}"
+echo "        logs=${LOG_DIR}"
 
 # ====== payment ======
 java $JAVA_OPTS -jar /app/payment.jar \
   --server.port=${PAYMENT_PORT} \
   --spring.profiles.active=${SPRING_PROFILES_ACTIVE} \
   --spring.kafka.bootstrap-servers=${KAFKA_BOOTSTRAP_SERVERS} \
-  > /app/payment.log 2>&1 &
+  2>&1 | tee -a "$LOG_DIR/payment.log" &
 PAYMENT_PID=$!
 echo "[bspay] payment started pid=${PAYMENT_PID} port=${PAYMENT_PORT}"
 
@@ -51,7 +52,7 @@ java $JAVA_OPTS -jar /app/order-command.jar \
   --spring.datasource.username=${DB_USER} \
   --spring.datasource.password=${DB_PASS} \
   --spring.kafka.bootstrap-servers=${KAFKA_BOOTSTRAP_SERVERS} \
-  > /app/order-command.log 2>&1 &
+  2>&1 | tee -a "$LOG_DIR/order-command.log" &
 ORDER_CMD_PID=$!
 echo "[bspay] order-command started pid=${ORDER_CMD_PID} port=${ORDER_CMD_PORT}"
 
@@ -63,7 +64,7 @@ java $JAVA_OPTS -jar /app/order-query.jar \
   --spring.datasource.username=${DB_USER} \
   --spring.datasource.password=${DB_PASS} \
   --spring.kafka.bootstrap-servers=${KAFKA_BOOTSTRAP_SERVERS} \
-  > /app/order-query.log 2>&1 &
+  2>&1 | tee -a "$LOG_DIR/order-query.log" &
 ORDER_QRY_PID=$!
 echo "[bspay] order-query started pid=${ORDER_QRY_PID} port=${ORDER_QRY_PORT}"
 
@@ -83,7 +84,7 @@ java $JAVA_OPTS -jar /app/gateway.jar \
   --spring.cloud.gateway.routes[2].uri=http://localhost:${ORDER_QRY_PORT} \
   --spring.cloud.gateway.routes[2].predicates[0]=Path=/api/query/** \
   --spring.cloud.gateway.routes[2].filters[0]=StripPrefix=1 \
-  > /app/gateway.log 2>&1 &
+  2>&1 | tee -a "$LOG_DIR/gateway.log" &
 GATEWAY_PID=$!
 echo "[bspay] gateway started pid=${GATEWAY_PID} port=${GATEWAY_PORT}"
 

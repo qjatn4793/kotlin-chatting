@@ -1,3 +1,6 @@
+import org.gradle.kotlin.dsl.named
+import org.springframework.boot.gradle.tasks.bundling.BootJar
+
 plugins {
     id("org.springframework.boot")
     id("io.spring.dependency-management")
@@ -13,4 +16,8 @@ dependencies {
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     runtimeOnly("com.mysql:mysql-connector-j") // MySQL 8
     testImplementation("org.springframework.boot:spring-boot-starter-test")
+}
+
+tasks.named<BootJar>("bootJar") {
+    mainClass.set("com.bspay.ordercmd.OrderCommandApplication")
 }

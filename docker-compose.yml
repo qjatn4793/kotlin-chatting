@@ -8,7 +8,6 @@ services:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: ops
       TZ: Asia/Seoul
-    command: ["--default-authentication-plugin=mysql_native_password","--lower_case_table_names=1"]
     ports: ["3306:3306"]
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-proot"]
@@ -41,6 +40,8 @@ services:
     networks: [appnet]
 
   bspay:
+    volumes:
+      - bspay_logs:/app/logs
     container_name: bspay
     build:
       context: .
@@ -78,3 +79,4 @@ networks:
 
 volumes:
   mysql_data:
+  bspay_logs:
