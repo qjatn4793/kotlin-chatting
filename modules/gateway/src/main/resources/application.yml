@@ -1,0 +1,20 @@
+server:
+  port: 8080
+spring:
+  application.name: gateway
+  cloud:
+    gateway:
+      routes:
+        - id: order
+          uri: http://localhost:8081
+          predicates: [ Path=/api/orders/** ]
+          filters: [ StripPrefix=1 ]
+        - id: payment
+          uri: http://localhost:8082
+          predicates: [ Path=/api/payments/** ]
+          filters: [ StripPrefix=1 ]
+        - id: order-query
+          uri: http://localhost:8083
+          predicates: [ Path=/api/query/** ]
+          filters: [ StripPrefix=1 ]
+management.endpoints.web.exposure.include: health,info

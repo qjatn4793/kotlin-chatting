@@ -1,0 +1,80 @@
+version: "3.9"
+
+services:
+  mysql:
+    image: mysql:8
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: ops
+      TZ: Asia/Seoul
+    command: ["--default-authentication-plugin=mysql_native_password","--lower_case_table_names=1"]
+    ports: ["3306:3306"]
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-proot"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks: [appnet]
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.6.1
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+    networks: [appnet]
+
+  kafka:
+    image: confluentinc/cp-kafka:7.6.1
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092,PLAINTEXT_HOST://0.0.0.0:9094
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:9094
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    ports: ["9094:9094"]
+    networks: [appnet]
+
+  bspay:
+    container_name: bspay
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: bspay:dev
+    depends_on:
+      mysql:
+        condition: service_healthy
+      kafka:
+        condition: service_started
+    environment:
+      TZ: Asia/Seoul
+      SPRING_PROFILES_ACTIVE: docker
+      # 포트 커스터마이즈 가능
+      GATEWAY_PORT: "8080"
+      ORDER_CMD_PORT: "8081"
+      PAYMENT_PORT: "8082"
+      ORDER_QRY_PORT: "8083"
+      # DB/Kafka 접속
+      DB_HOST: mysql
+      DB_PORT: "3306"
+      DB_NAME: ops
+      DB_USER: root
+      DB_PASS: root
+      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+    ports:
+      - "8080:8080"   # 게이트웨이 외부 접근
+      - "8081:8081"   # (원하면 공개) 주문 커맨드
+      - "8082:8082"   # (원하면 공개) 결제
+      - "8083:8083"   # (원하면 공개) 조회
+    networks: [appnet]
+
+networks:
+  appnet:
+
+volumes:
+  mysql_data:
