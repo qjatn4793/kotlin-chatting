@@ -16,7 +16,7 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "ledgerflow"
+rootProject.name = "kotlin-chatting"
 
 include(":modules:gateway")
 include(":modules:order-command")
