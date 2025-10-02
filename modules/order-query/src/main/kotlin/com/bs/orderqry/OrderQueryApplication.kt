@@ -1,6 +1,6 @@
-package com.bspay.ordercmd
+package com.bs.orderqry
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 @SpringBootApplication
-class OrderCommandApplication
-fun main(args: Array<String>) = runApplication<OrderCommandApplication>(*args)
+class OrderQueryApplication
+fun main(args: Array<String>) = runApplication<OrderQueryApplication>(*args)

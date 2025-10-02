@@ -1,4 +1,4 @@
-package com.bspay.gateway
+package com.bs.gateway
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication

@@ -11,7 +11,7 @@ plugins {
 
 // 공통 group/version (원하면 조직/버전 규칙에 맞게 수정)
 allprojects {
-    group = "com.bspay"
+    group = "com.bs"
     version = "0.0.1-SNAPSHOT"
 }
 

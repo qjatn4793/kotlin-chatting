@@ -1,4 +1,4 @@
-package com.bspay.orderqry
+package com.bs.orderqry
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 

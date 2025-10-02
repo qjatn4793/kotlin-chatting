@@ -1,7 +1,7 @@
-package com.bspay.ordercmd.api
+package com.bs.ordercmd.api
 
-import com.bspay.ordercmd.domain.Order
-import com.bspay.ordercmd.domain.OrderRepository
+import com.bs.ordercmd.domain.Order
+import com.bs.ordercmd.domain.OrderRepository
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.client.RestClient

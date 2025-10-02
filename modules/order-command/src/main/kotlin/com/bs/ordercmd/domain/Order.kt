@@ -1,4 +1,4 @@
-package com.bspay.ordercmd.domain
+package com.bs.ordercmd.domain
 import jakarta.persistence.*
 import java.time.Instant
 

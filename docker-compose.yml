@@ -39,14 +39,14 @@ services:
     ports: ["9094:9094"]
     networks: [appnet]
 
-  bspay:
+  bs:
     volumes:
-      - bspay_logs:/app/logs
-    container_name: bspay
+      - bs_logs:/app/logs
+    container_name: bs
     build:
       context: .
       dockerfile: Dockerfile
-    image: bspay:dev
+    image: bs:dev
     depends_on:
       mysql:
         condition: service_healthy
@@ -79,4 +79,4 @@ networks:
 
 volumes:
   mysql_data:
-  bspay_logs:
+  bs_logs:

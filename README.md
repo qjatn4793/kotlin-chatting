@@ -1,7 +1,7 @@
 # 1) 빌드(멀티스테이지: Gradle 빌드 → 런타임 이미지)
-docker compose build bspay
+docker compose build bs
 
-# 2) 전체 기동(MySQL, Kafka, bspay)
+# 2) 전체 기동(MySQL, Kafka, bs)
 docker compose up -d
 
 # 3) 테스트(게이트웨이 경유)

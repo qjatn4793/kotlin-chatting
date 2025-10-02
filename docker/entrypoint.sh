@@ -3,7 +3,7 @@ set -euo pipefail
 
 # 종료 시 자식 프로세스 모두 정리
 cleanup() {
-  echo "[bspay] shutting down..."
+  echo "[bs] shutting down..."
   pkill -P $$ || true
   wait || true
 }
@@ -33,7 +33,7 @@ trap cleanup SIGTERM SIGINT EXIT
 : "${LOG_DIR:=/app/logs}"
 mkdir -p "$LOG_DIR"
 
-echo "[bspay] starting services..."
+echo "[bs] starting services..."
 echo "        profile=${SPRING_PROFILES_ACTIVE}"
 echo "        db=jdbc:mysql://${DB_HOST}:${DB_PORT}/${DB_NAME}"
 echo "        kafka=${KAFKA_BOOTSTRAP_SERVERS}"
@@ -46,7 +46,7 @@ java $JAVA_OPTS -jar /app/payment.jar \
   --spring.kafka.bootstrap-servers="${KAFKA_BOOTSTRAP_SERVERS}" \
   2>&1 | tee -a "${LOG_DIR}/payment.log" &
 PAYMENT_PID=$!
-echo "[bspay] payment started pid=${PAYMENT_PID} port=${PAYMENT_PORT}"
+echo "[bs] payment started pid=${PAYMENT_PID} port=${PAYMENT_PORT}"
 
 # ====== order-command ======
 java $JAVA_OPTS -jar /app/order-command.jar \
@@ -58,7 +58,7 @@ java $JAVA_OPTS -jar /app/order-command.jar \
   --spring.kafka.bootstrap-servers="${KAFKA_BOOTSTRAP_SERVERS}" \
   2>&1 | tee -a "${LOG_DIR}/order-command.log" &
 ORDER_CMD_PID=$!
-echo "[bspay] order-command started pid=${ORDER_CMD_PID} port=${ORDER_CMD_PORT}"
+echo "[bs] order-command started pid=${ORDER_CMD_PID} port=${ORDER_CMD_PORT}"
 
 # ====== order-query ======
 java $JAVA_OPTS -jar /app/order-query.jar \
@@ -70,7 +70,7 @@ java $JAVA_OPTS -jar /app/order-query.jar \
   --spring.kafka.bootstrap-servers="${KAFKA_BOOTSTRAP_SERVERS}" \
   2>&1 | tee -a "${LOG_DIR}/order-query.log" &
 ORDER_QRY_PID=$!
-echo "[bspay] order-query started pid=${ORDER_QRY_PID} port=${ORDER_QRY_PORT}"
+echo "[bs] order-query started pid=${ORDER_QRY_PID} port=${ORDER_QRY_PORT}"
 
 # ====== gateway ======
 java $JAVA_OPTS -jar /app/gateway.jar \
@@ -90,7 +90,7 @@ java $JAVA_OPTS -jar /app/gateway.jar \
   --spring.cloud.gateway.routes[2].filters[0]=StripPrefix=1 \
   2>&1 | tee -a "${LOG_DIR}/gateway.log" &
 GATEWAY_PID=$!
-echo "[bspay] gateway started pid=${GATEWAY_PID} port=${GATEWAY_PORT}"
+echo "[bs] gateway started pid=${GATEWAY_PID} port=${GATEWAY_PORT}"
 
 # 가장 먼저 종료되는 프로세스를 기다렸다가 전체 종료
 wait -n

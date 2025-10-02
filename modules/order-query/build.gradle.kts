@@ -19,5 +19,5 @@ dependencies {
 }
 
 tasks.named<BootJar>("bootJar") {
-    mainClass.set("com.bspay.orderqry.OrderQueryApplicationKt")
+    mainClass.set("com.bs.orderqry.OrderQueryApplicationKt")
 }
